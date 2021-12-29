@@ -68,7 +68,7 @@ function MainPage() {
     <FlexContainer>
       <TextContainer>
         <h1>Can you find all the characters in the least time?</h1>
-        <Link to="/MainGame">
+        <Link to="/maingame">
           <Button>Play Now</Button>
         </Link>
       </TextContainer>
