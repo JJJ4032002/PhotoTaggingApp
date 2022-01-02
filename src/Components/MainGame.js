@@ -1,25 +1,26 @@
 import styled from "styled-components";
 import source from "../Images/WaldoLevel1imp.jpg";
 import cursor from "../Images/cursor.png";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Wally from "../Images/WallyT.png";
 import Wenda from "../Images/WendaT.png";
 import { devices } from "../Media queries/Queries";
+import background from "../Images/confetti-doodles.svg";
 
 const Navbar = styled.nav`
   @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
   display: flex;
-  padding: 1em;
+  padding: 0.5em;
   gap: 0.6em;
   font-size: clamp(0.9rem, 2.5vw, 1.2rem);
   font-family: "Indie Flower";
   color: white;
   background-color: #6c63ff;
   align-items: center;
-  height: 10%;
+  height: 10vh;
   width: 100%;
   @media ${devices.laptop} {
-    height: 15%;
+    height: 12vh;
   }
 `;
 const Container = styled.div`
@@ -28,12 +29,30 @@ const Container = styled.div`
 const ImgContainer = styled.div`
   display: flex;
   justify-content: center;
-  height: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background: url(${background});
 `;
 const Image = styled.img`
   object-fit: cover;
   width: 100%;
   position: relative;
+  margin: 1em 0;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  @media ${devices.tablet} {
+    width: 768px;
+  }
+  @media ${devices.laptop} {
+    width: 1024px;
+  }
+  @media ${devices.laptopL} {
+    width: 1440px;
+  }
+  @media ${devices.desktop} {
+    width: 2560px;
+  }
 
   &:hover {
     cursor: url(${cursor}), default;
@@ -83,7 +102,6 @@ const InnerDiv = styled.div`
   width: 50%;
 `;
 const AbsImage = styled.img.attrs((props) => {
-  console.log(props.IO);
   return {
     IX: `${props.IO[0]}px`,
     IY: `${props.IO[1]}px`,
@@ -100,12 +118,14 @@ function MainGame() {
   const [ScaleY, setScaleY] = useState(0);
   const [ScaleIY, setScaleIY] = useState([-1000, -1000]);
   const [RendCard, setRendCard] = useState({ bool: false, X: 0, Y: 0 });
+  const inputEl = useRef(null);
   function ImageClicked(e) {
     console.log(e.target.attributes);
-    console.log(e.clientX, e.clientY);
+
+    console.log(e.pageX, e.pageY);
     setRendCard((parameter) => ({
       bool: !parameter.bool,
-      X: e.pageX,
+      X: e.clientX,
       Y: e.pageY,
     }));
   }
@@ -118,6 +138,12 @@ function MainGame() {
       setScaleIY([-1000, -1000]);
     }
   }, [RendCard]);
+
+  useEffect(() => {
+    console.log(window.scrollY);
+    let rect = inputEl.current.getBoundingClientRect();
+    console.log(rect.left, rect.top, rect.top + window.scrollY);
+  }, [ScaleIY]);
   return (
     <Container>
       <Navbar>
@@ -125,13 +151,16 @@ function MainGame() {
         <ImageNav src={Wally}></ImageNav>
         <ImageNav src={Wenda}></ImageNav>
       </Navbar>
+
       <ImgContainer>
         <Image
           onClick={ImageClicked}
           className="PuzzleImg"
           src={source}
         ></Image>
+        <AbsImage ref={inputEl} IO={ScaleIY} src={cursor}></AbsImage>
       </ImgContainer>
+
       <Card Y={ScaleY}>
         <h3>Who is it</h3>
         <InnerFlex>
@@ -146,7 +175,6 @@ function MainGame() {
           </InnerDiv>
         </InnerFlex>
       </Card>
-      <AbsImage IO={ScaleIY} src={cursor}></AbsImage>
     </Container>
   );
 }
