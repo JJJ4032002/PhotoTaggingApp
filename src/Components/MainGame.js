@@ -29,7 +29,7 @@ const Container = styled.div`
 const ImgContainer = styled.div`
   display: flex;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
   background: url(${background});
@@ -43,15 +43,19 @@ const Image = styled.img`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   @media ${devices.tablet} {
     width: 768px;
+    height: 600px;
   }
   @media ${devices.laptop} {
     width: 1024px;
+    height: 768px;
   }
   @media ${devices.laptopL} {
     width: 1440px;
+    height: 720px;
   }
   @media ${devices.desktop} {
     width: 2560px;
+    height: 1300px;
   }
 
   &:hover {
@@ -115,10 +119,17 @@ const AbsImage = styled.img.attrs((props) => {
   z-index: 1;
 `;
 function MainGame() {
-  const [ScaleY, setScaleY] = useState(0);
-  const [ScaleIY, setScaleIY] = useState([-1000, -1000]);
+  //State to bring card on screen when clicked.
+  const [CoordCard, setCoordCard] = useState(0);
+  //State to bring marker on screen when image clicked.
+  const [CoordCursor, setCoordCursor] = useState([-1000, -1000]);
+  //State to validate when to render card and to make it vanish.
   const [RendCard, setRendCard] = useState({ bool: false, X: 0, Y: 0 });
-  const inputEl = useRef(null);
+  //Targeting Cursor Image
+  const CursorImageEl = useRef(null);
+  //Targeting the Main Puzzle Image
+  const PuzzleImageEl = useRef(null);
+  //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
     console.log(e.target.attributes);
 
@@ -129,21 +140,29 @@ function MainGame() {
       Y: e.pageY,
     }));
   }
+  //Runs when rendcard is changed bringing marker and card on screen.
   useEffect(() => {
     if (RendCard.bool) {
-      setScaleY(`20%`);
-      setScaleIY([+RendCard.X, +RendCard.Y]);
+      setCoordCard(`20%`);
+      setCoordCursor([+RendCard.X, +RendCard.Y]);
     } else {
-      setScaleY(0);
-      setScaleIY([-1000, -1000]);
+      setCoordCard(0);
+      setCoordCursor([-1000, -1000]);
     }
   }, [RendCard]);
-
+  //Getting the coordinates of the character with repsect to the card.
   useEffect(() => {
     console.log(window.scrollY);
-    let rect = inputEl.current.getBoundingClientRect();
+    let rect = CursorImageEl.current.getBoundingClientRect();
+    let imageRect = PuzzleImageEl.current.getBoundingClientRect();
+    console.log(imageRect.left, imageRect.top, imageRect.top + window.scrollY);
     console.log(rect.left, rect.top, rect.top + window.scrollY);
-  }, [ScaleIY]);
+    console.log(
+      rect.top + window.scrollY - (imageRect.top + window.scrollY),
+      rect.left - imageRect.left
+    );
+  }, [CoordCursor]);
+  //Jsx
   return (
     <Container>
       <Navbar>
@@ -153,20 +172,15 @@ function MainGame() {
       </Navbar>
 
       <ImgContainer>
-        <Image
-          onClick={ImageClicked}
-          className="PuzzleImg"
-          src={source}
-        ></Image>
-        <AbsImage ref={inputEl} IO={ScaleIY} src={cursor}></AbsImage>
+        <Image ref={PuzzleImageEl} onClick={ImageClicked} src={source}></Image>
+        <AbsImage ref={CursorImageEl} IO={CoordCursor} src={cursor}></AbsImage>
       </ImgContainer>
 
-      <Card Y={ScaleY}>
+      <Card Y={CoordCard}>
         <h3>Who is it</h3>
         <InnerFlex>
           <InnerDiv>
             <ImageDiv src={Wally}></ImageDiv>
-
             <p>Wally</p>
           </InnerDiv>
           <InnerDiv>
