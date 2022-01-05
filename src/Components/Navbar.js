@@ -4,7 +4,6 @@ import { devices } from "../Media queries/Queries";
 import { Link } from "react-router-dom";
 
 const NavStyles = styled.nav`
-  @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
   padding: 0.6em;
   background-color: #6c63ff;
   display: flex;
