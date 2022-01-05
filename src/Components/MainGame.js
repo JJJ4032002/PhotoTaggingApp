@@ -6,9 +6,9 @@ import Wally from "../Images/WallyT.png";
 import Wenda from "../Images/WendaT.png";
 import { devices } from "../Media queries/Queries";
 import background from "../Images/confetti-doodles.svg";
-
+import Card from "./MainGameComponents/Card";
+import useWindowSize from "../Hooks/useWindowSize";
 const Navbar = styled.nav`
-  @import url("https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap");
   display: flex;
   padding: 0.5em;
   gap: 0.6em;
@@ -17,7 +17,7 @@ const Navbar = styled.nav`
   color: white;
   background-color: #6c63ff;
   align-items: center;
-  height: 10vh;
+  height: 15vh;
   width: 100%;
   @media ${devices.laptop} {
     height: 12vh;
@@ -65,46 +65,7 @@ const Image = styled.img`
 const ImageNav = styled.img`
   height: 100%;
 `;
-const Card = styled.div.attrs((props) => {
-  return { Y: props.Y || `-1000px` };
-})`
-  position: absolute;
-  height: 150px;
-  padding: 0.4em;
-  width: 40%;
-  top: ${(props) => props.Y};
-  left: 30%;
-  font-family: "Indie Flower";
-  right: 30%;
-  font-weight: 800;
-  text-align: center;
-  background: white;
-  border-radius: 0.5em;
-  transition: top 300ms ease-in-out;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  z-index: 2;
-  @media ${devices.laptop} {
-    width: 20%;
-    left: 40%;
-    right: 40%;
-  }
-`;
-const InnerFlex = styled.div`
-  display: flex;
-  align-items: center;
-  height: 75%;
-  margin-top: 0.2em;
-`;
-const ImageDiv = styled.img`
-  width: 100%;
-  height: 70%;
-  object-fit: scale-down;
-  cursor: pointer;
-`;
-const InnerDiv = styled.div`
-  height: 100%;
-  width: 50%;
-`;
+
 const AbsImage = styled.img.attrs((props) => {
   return {
     IX: `${props.IO[0]}px`,
@@ -125,6 +86,8 @@ function MainGame() {
   const [CoordCursor, setCoordCursor] = useState([-1000, -1000]);
   //State to validate when to render card and to make it vanish.
   const [RendCard, setRendCard] = useState({ bool: false, X: 0, Y: 0 });
+  const size = useWindowSize();
+  console.log(size);
   //Targeting Cursor Image
   const CursorImageEl = useRef(null);
   //Targeting the Main Puzzle Image
@@ -176,19 +139,7 @@ function MainGame() {
         <AbsImage ref={CursorImageEl} IO={CoordCursor} src={cursor}></AbsImage>
       </ImgContainer>
 
-      <Card Y={CoordCard}>
-        <h3>Who is it</h3>
-        <InnerFlex>
-          <InnerDiv>
-            <ImageDiv src={Wally}></ImageDiv>
-            <p>Wally</p>
-          </InnerDiv>
-          <InnerDiv>
-            <ImageDiv src={Wenda}></ImageDiv>
-            <p>Wenda</p>
-          </InnerDiv>
-        </InnerFlex>
-      </Card>
+      <Card Y={CoordCard}></Card>
     </Container>
   );
 }
