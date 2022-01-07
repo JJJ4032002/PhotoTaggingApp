@@ -2,7 +2,6 @@
   "name": "photo-tagging-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/JJJ4032002/PhotoTaggingApp",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -17,6 +16,7 @@
     "uuid": "^8.3.2",
     "web-vitals": "^2.1.2"
   },
+  "homepage": "https://JJJ4032002.github.io/PhotoTaggingApp",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -43,6 +43,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^2.2.0"
   }
 }
