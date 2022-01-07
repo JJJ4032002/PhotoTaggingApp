@@ -18,7 +18,7 @@ const Navbar = styled.nav`
   color: white;
   background-color: #6c63ff;
   align-items: center;
-  height: 8vh;
+  height: 12vh;
   width: 100%;
   @media ${devices.laptop} {
     height: 12vh;
@@ -67,7 +67,7 @@ const Image = styled.img`
   }
 
   &:hover {
-    cursor: url(${cursor}), default;
+    cursor: crosshair;
   }
 `;
 const ImageNav = styled.img`
@@ -110,14 +110,11 @@ function MainGame() {
     let Y = 0;
     if (validTouch) {
       console.log(e.target);
-      console.log(e.changedTouches[0].pageX);
+
       X = e.changedTouches[0].clientX;
       console.log(e.changedTouches[0].pageY);
       Y = e.changedTouches[0].pageY;
     } else {
-      console.log(e.target.attributes);
-
-      console.log(e.pageX, e.pageY);
       X = e.clientX;
       Y = e.pageY;
     }
@@ -152,7 +149,7 @@ function MainGame() {
   useEffect(() => {
     if (RendCard.bool) {
       setCoordCard(`20%`);
-      setCoordCursor([+RendCard.X, +RendCard.Y]);
+      setCoordCursor([+RendCard.X - 35, +RendCard.Y - 35]);
     } else {
       setCoordCard(0);
       setCoordCursor([-1000, -1000]);
