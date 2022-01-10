@@ -1,92 +1,25 @@
-import styled from "styled-components";
 import source from "../Images/WaldoLevel1imp.jpg";
 import cursor from "../Images/cursor.png";
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import Wally from "../Images/WallyT.png";
 import Wenda from "../Images/WendaT.png";
-import { devices } from "../Media queries/Queries";
-import background from "../Images/confetti-doodles.svg";
+
 import Card from "./MainGameComponents/Card";
 import useWindowSize from "../Hooks/useWindowSize";
+import getDocument from "../Firebase/getDocument";
+import { sizes } from "../Media queries/Queries";
+import useTimer from "../Hooks/useTimer";
+import {
+  Navbar,
+  AbsImage,
+  ImageNav,
+  Image,
+  ImgContainer,
+  Container,
+  NotValidHead,
+  InnerDiv,
+} from "./MainGameCss";
 
-const Navbar = styled.nav`
-  display: flex;
-  padding: 0.5em;
-  gap: 0.6em;
-  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
-  font-family: "Indie Flower";
-  color: white;
-  background-color: #6c63ff;
-  align-items: center;
-  height: 12vh;
-  width: 100%;
-  @media ${devices.laptop} {
-    height: 12vh;
-  }
-`;
-const NotValidHead = styled.h3`
-  font-family: "Indie Flower";
-`;
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-
-  flex-direction: column;
-  text-align: center;
-  min-height: 100vh;
-`;
-const ImgContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background: url(${background});
-`;
-const Image = styled.img`
-  object-fit: cover;
-  width: 100%;
-  width: 768px;
-  height: 600px;
-  position: relative;
-  margin: 1em 0;
-
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-
-  @media ${devices.laptop} {
-    width: 1024px;
-    height: 768px;
-  }
-  @media ${devices.laptopL} {
-    width: 1440px;
-    height: 720px;
-  }
-  @media ${devices.desktop} {
-    width: 2560px;
-    height: 1300px;
-  }
-
-  &:hover {
-    cursor: crosshair;
-  }
-`;
-const ImageNav = styled.img`
-  height: 100%;
-`;
-
-const AbsImage = styled.img.attrs((props) => {
-  return {
-    IX: `${props.IO[0]}px`,
-    IY: `${props.IO[1]}px`,
-  };
-})`
-  position: absolute;
-  top: ${(props) => props.IY};
-  left: ${(props) => props.IX};
-  height: 70px;
-  width: 70px;
-  z-index: 1;
-`;
 function MainGame() {
   //State to bring card on screen when clicked.
   const [CoordCard, setCoordCard] = useState(0);
@@ -98,12 +31,23 @@ function MainGame() {
   const [validWidth, setValidWidth] = useState(false);
   //State to validate if device has touch screen support or not
   const [validTouch, setValidTouch] = useState(false);
+  //Getting window size.
   const size = useWindowSize();
+  const time = useTimer();
 
   //Targeting Cursor Image
   const CursorImageEl = useRef(null);
   //Targeting the Main Puzzle Image
   const PuzzleImageEl = useRef(null);
+  //State to get character data.
+  const [CharacterData, setCharcaterData] = useState("");
+  function getCharacterData(data) {
+    setCharcaterData(data);
+  }
+  useEffect(() => {
+    console.log(time.third, time.second, time.first);
+    return () => {};
+  }, [time]);
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
     let X = 0;
@@ -124,8 +68,17 @@ function MainGame() {
       Y: Y,
     }));
   }
+  //
+  useEffect(() => {
+    if (CharacterData) {
+      if (size[0] < Number(sizes.laptopL.split("px")[0])) {
+        console.log("Hello");
+      }
+    }
+  }, [CharacterData]);
   //Check the window width and decide if the level is playable or not.
   useLayoutEffect(() => {
+    console.log("lay1");
     if (size[0] < 768) {
       setValidWidth(true);
     } else {
@@ -136,6 +89,7 @@ function MainGame() {
   }, [size]);
 
   useLayoutEffect(() => {
+    console.log("lay2");
     if (window.matchMedia("(pointer: coarse)").matches) {
       // touchscreen
       console.log("Touch screen");
@@ -145,8 +99,17 @@ function MainGame() {
     }
     return () => {};
   }, []);
+
+  useEffect(() => {
+    console.log(window.innerHeight, window.innerWidth);
+    const widthScreen = window.innerWidth;
+    if (widthScreen < Number(sizes.laptopL.split("px")[0])) {
+      getDocument("Coordinates", getCharacterData);
+    }
+  }, []);
   //Runs when rendcard is changed bringing marker and card on screen.
   useEffect(() => {
+    console.log("hey");
     if (RendCard.bool) {
       setCoordCard(`20%`);
       setCoordCursor([+RendCard.X - 35, +RendCard.Y - 35]);
@@ -157,6 +120,7 @@ function MainGame() {
   }, [RendCard]);
   //Getting the coordinates of the character with repsect to the card.
   useEffect(() => {
+    console.log("hmm");
     if (RendCard.bool) {
       console.log(window.scrollY);
       let rect = CursorImageEl.current.getBoundingClientRect();
@@ -184,9 +148,14 @@ function MainGame() {
       ) : (
         <>
           <Navbar>
-            <h1>Find :</h1>
-            <ImageNav src={Wally}></ImageNav>
-            <ImageNav src={Wenda}></ImageNav>
+            <InnerDiv>
+              <h1>Find :</h1>
+              <ImageNav src={Wally}></ImageNav>
+              <ImageNav src={Wenda}></ImageNav>
+            </InnerDiv>
+            <InnerDiv>
+              <h1>{`${time.third}.${time.second}${time.first}`}</h1>
+            </InnerDiv>
           </Navbar>
 
           <ImgContainer>
