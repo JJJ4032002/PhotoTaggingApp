@@ -5,55 +5,86 @@ import { devices } from "../../Media queries/Queries";
 const InnerFlex = styled.div`
   display: flex;
   align-items: center;
-  height: 75%;
-  margin-top: 0.2em;
+
+  height: 100%;
 `;
 const ImageDiv = styled.img`
   width: 100%;
-  height: 70%;
+  height: 60%;
   object-fit: scale-down;
-  cursor: pointer;
 `;
 const InnerDiv = styled.div`
   height: 100%;
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 0%;
+    left: 0;
+    top: 0;
+    transition: height 300ms ease;
+    text-align: center;
+    background-color: #6c63ff;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 0%;
+    bottom: 0;
+    left: 0;
+    transition: width 300ms ease;
+    text-align: center;
+    background-color: #6c63ff;
+  }
+  &:hover::after {
+    width: 100%;
+  }
+  &:hover::before {
+    height: 100%;
+  }
 `;
 
 const CardBody = styled.div.attrs((props) => {
-  return { Y: props.Y || `-1000px` };
+  return { IX: `${props.Y[0]}px`, IY: `${props.Y[1]}px` };
 })`
   position: absolute;
-  height: 150px;
-  padding: 0.4em;
-  width: 40%;
-  top: ${(props) => props.Y};
-  left: 30%;
+  height: 80px;
+  padding: 0.3em;
+  width: 15%;
+  top: ${(props) => props.IY};
+  left: ${(props) => props.IX};
+
   font-family: "Indie Flower";
-  right: 30%;
+
   font-weight: 800;
   text-align: center;
   background: white;
   border-radius: 0.5em;
-  transition: top 300ms ease-in-out;
+
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   z-index: 2;
   @media ${devices.laptop} {
-    width: 20%;
-    left: 40%;
-    right: 40%;
+    width: 10%;
   }
 `;
+const Para = styled.p``;
 
-function Card({ Y }) {
+function Card({ Y, CardClicked }) {
   return (
     <CardBody Y={Y}>
-      <h3>Who is it</h3>
       <InnerFlex>
         {CharacterArr.map((char) => {
           return (
-            <InnerDiv key={char.id}>
-              <ImageDiv src={char.src}></ImageDiv>
-              <p>{char.CharName}</p>
+            <InnerDiv onClick={CardClicked} key={char.id}>
+              <ImageDiv id={char.CharName} src={char.src}></ImageDiv>
+              <Para>{char.CharName}</Para>
             </InnerDiv>
           );
         })}
