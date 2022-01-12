@@ -8,8 +8,6 @@ function useTimer() {
   });
   useEffect(() => {
     const interval = setInterval(function () {
-      console.log("ran");
-
       setTime((prev) => {
         if (prev.second === 5 && prev.first === 9) {
           return { third: prev.third + 1, second: 0, first: 0 };
