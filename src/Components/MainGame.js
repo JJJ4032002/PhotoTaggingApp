@@ -19,10 +19,11 @@ import {
   NotValidHead,
   InnerDiv,
 } from "./MainGameCss";
+import CharacterArr from "./MainGameComponents/Character";
 
 function MainGame() {
   //State to bring card on screen when clicked.
-  const [CoordCard, setCoordCard] = useState(0);
+  const [CoordCard, setCoordCard] = useState([-1000, -1000]);
   //State to bring marker on screen when image clicked.
   const [CoordCursor, setCoordCursor] = useState([-1000, -1000]);
   //State to validate when to render card and to make it vanish.
@@ -41,13 +42,12 @@ function MainGame() {
   const PuzzleImageEl = useRef(null);
   //State to get character data.
   const [CharacterData, setCharcaterData] = useState("");
+  //
+  const [WindowCoord, setWindowCoord] = useState([]);
   function getCharacterData(data) {
     setCharcaterData(data);
   }
-  useEffect(() => {
-    console.log(time.third, time.second, time.first);
-    return () => {};
-  }, [time]);
+
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
     let X = 0;
@@ -68,14 +68,55 @@ function MainGame() {
       Y: Y,
     }));
   }
-  //
+
+  function CardClicked(event) {
+    if (event.target.id) {
+      console.log(event.target.id);
+    } else {
+      console.log(event.target.textContent);
+    }
+  }
+  // Set current window coordinates according to window width.
   useEffect(() => {
     if (CharacterData) {
-      if (size[0] < Number(sizes.laptopL.split("px")[0])) {
-        console.log("Hello");
+      setWindowCoord([]);
+      for (let i = 0; i < CharacterArr.length; i++) {
+        if (size[0] < Number(sizes.laptop.split("px")[0])) {
+          setWindowCoord((prevItems) => {
+            return [
+              ...prevItems,
+
+              CharacterData[`${CharacterArr[i].CharName}Coord`]["TabletCoord"],
+            ];
+          });
+        } else if (size[0] < Number(sizes.laptopL.split("px")[0])) {
+          setWindowCoord((prevItems) => {
+            return [
+              ...prevItems,
+
+              CharacterData[`${CharacterArr[i].CharName}Coord`]["LaptopCoord"],
+            ];
+          });
+        } else if (size[0] < Number(sizes.desktop.split("px")[0])) {
+          setWindowCoord((prevItems) => {
+            return [
+              ...prevItems,
+
+              CharacterData[`${CharacterArr[i].CharName}Coord`]["LaptopLCoord"],
+            ];
+          });
+        } else {
+          setWindowCoord((prevItems) => {
+            return [
+              ...prevItems,
+
+              CharacterData[`${CharacterArr[i].CharName}Coord`]["DesktopCoord"],
+            ];
+          });
+        }
       }
     }
-  }, [CharacterData]);
+  }, [size, CharacterData]);
   //Check the window width and decide if the level is playable or not.
   useLayoutEffect(() => {
     console.log("lay1");
@@ -111,10 +152,10 @@ function MainGame() {
   useEffect(() => {
     console.log("hey");
     if (RendCard.bool) {
-      setCoordCard(`20%`);
+      setCoordCard([+RendCard.X - 60, +RendCard.Y - 120]);
       setCoordCursor([+RendCard.X - 35, +RendCard.Y - 35]);
     } else {
-      setCoordCard(0);
+      setCoordCard([-1000, -1000]);
       setCoordCursor([-1000, -1000]);
     }
   }, [RendCard]);
@@ -179,7 +220,7 @@ function MainGame() {
             ></AbsImage>
           </ImgContainer>
 
-          <Card Y={CoordCard}></Card>
+          <Card CardClicked={CardClicked} Y={CoordCard}></Card>
         </>
       )}
     </Container>
