@@ -1,20 +1,15 @@
-import source from "../Images/WaldoLevel1imp.jpg";
-import cursor from "../Images/cursor.png";
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import Wally from "../Images/WallyT.png";
 import Wenda from "../Images/WendaT.png";
-
 import Card from "./MainGameComponents/Card";
 import useWindowSize from "../Hooks/useWindowSize";
 import getDocument from "../Firebase/getDocument";
 import { sizes } from "../Media queries/Queries";
 import useTimer from "../Hooks/useTimer";
+import PuzzleImage from "./MainGameComponents/PuzzleImage";
 import {
   Navbar,
-  AbsImage,
   ImageNav,
-  Image,
-  ImgContainer,
   Container,
   NotValidHead,
   InnerDiv,
@@ -44,6 +39,7 @@ function MainGame() {
   const [CharacterData, setCharcaterData] = useState("");
   //
   const [WindowCoord, setWindowCoord] = useState([]);
+  const [selectCoord, setSelectedCood] = useState([]);
   function getCharacterData(data) {
     setCharcaterData(data);
   }
@@ -68,25 +64,44 @@ function MainGame() {
       Y: Y,
     }));
   }
-
+  // Check if card matched.
   function CardClicked(event) {
+    let charName = "";
     if (event.target.id) {
-      console.log(event.target.id);
+      charName = event.target.id;
     } else {
-      console.log(event.target.textContent);
+      charName = event.target.textContent;
     }
+    WindowCoord.forEach((element) => {
+      if (element.CharName === charName) {
+        if (
+          selectCoord[0] > element.Coord.YStart &&
+          selectCoord[0] < element.Coord.YEnd &&
+          selectCoord[1] > element.Coord.XStart &&
+          selectCoord[1] < element.Coord.XEnd
+        ) {
+          console.log("matched");
+        }
+      }
+    });
   }
   // Set current window coordinates according to window width.
   useEffect(() => {
     if (CharacterData) {
+      //Discarding the previous coordinates
       setWindowCoord([]);
       for (let i = 0; i < CharacterArr.length; i++) {
         if (size[0] < Number(sizes.laptop.split("px")[0])) {
           setWindowCoord((prevItems) => {
             return [
               ...prevItems,
-
-              CharacterData[`${CharacterArr[i].CharName}Coord`]["TabletCoord"],
+              {
+                CharName: CharacterArr[i].CharName,
+                Coord:
+                  CharacterData[`${CharacterArr[i].CharName}Coord`][
+                    "TabletCoord"
+                  ],
+              },
             ];
           });
         } else if (size[0] < Number(sizes.laptopL.split("px")[0])) {
@@ -94,7 +109,13 @@ function MainGame() {
             return [
               ...prevItems,
 
-              CharacterData[`${CharacterArr[i].CharName}Coord`]["LaptopCoord"],
+              {
+                CharName: CharacterArr[i].CharName,
+                Coord:
+                  CharacterData[`${CharacterArr[i].CharName}Coord`][
+                    "LaptopCoord"
+                  ],
+              },
             ];
           });
         } else if (size[0] < Number(sizes.desktop.split("px")[0])) {
@@ -102,7 +123,13 @@ function MainGame() {
             return [
               ...prevItems,
 
-              CharacterData[`${CharacterArr[i].CharName}Coord`]["LaptopLCoord"],
+              {
+                CharName: CharacterArr[i].CharName,
+                Coord:
+                  CharacterData[`${CharacterArr[i].CharName}Coord`][
+                    "LaptopLCoord"
+                  ],
+              },
             ];
           });
         } else {
@@ -110,7 +137,13 @@ function MainGame() {
             return [
               ...prevItems,
 
-              CharacterData[`${CharacterArr[i].CharName}Coord`]["DesktopCoord"],
+              {
+                CharName: CharacterArr[i].CharName,
+                Coord:
+                  CharacterData[`${CharacterArr[i].CharName}Coord`][
+                    "DesktopCoord"
+                  ],
+              },
             ];
           });
         }
@@ -176,6 +209,9 @@ function MainGame() {
         rect.top + window.scrollY - (imageRect.top + window.scrollY),
         rect.left - imageRect.left
       );
+      let Y = rect.top + window.scrollY - (imageRect.top + window.scrollY);
+      let X = rect.left - imageRect.left;
+      setSelectedCood([Y, X]);
     }
   }, [CoordCursor]);
   //Jsx
@@ -199,27 +235,13 @@ function MainGame() {
             </InnerDiv>
           </Navbar>
 
-          <ImgContainer>
-            {validTouch ? (
-              <Image
-                ref={PuzzleImageEl}
-                onTouchStart={ImageClicked}
-                src={source}
-              ></Image>
-            ) : (
-              <Image
-                ref={PuzzleImageEl}
-                onClick={ImageClicked}
-                src={source}
-              ></Image>
-            )}
-            <AbsImage
-              ref={CursorImageEl}
-              IO={CoordCursor}
-              src={cursor}
-            ></AbsImage>
-          </ImgContainer>
-
+          <PuzzleImage
+            PuzzleImageEl={PuzzleImageEl}
+            ImageClicked={ImageClicked}
+            CursorImageEl={CursorImageEl}
+            CoordCursor={CoordCursor}
+            validTouch={validTouch}
+          ></PuzzleImage>
           <Card CardClicked={CardClicked} Y={CoordCard}></Card>
         </>
       )}
