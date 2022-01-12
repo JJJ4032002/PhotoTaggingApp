@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/PhotoTaggingApp/static/css/main.a7640163.css",
-    "main.js": "/PhotoTaggingApp/static/js/main.6bb26873.js",
+    "main.js": "/PhotoTaggingApp/static/js/main.d57bd739.js",
     "static/js/787.6bd778a4.chunk.js": "/PhotoTaggingApp/static/js/787.6bd778a4.chunk.js",
     "static/media/WaldoLevel1imp.jpg": "/PhotoTaggingApp/static/media/WaldoLevel1imp.48d6f40ce10d437b2b8a.jpg",
-    "static/media/WendaT.png": "/PhotoTaggingApp/static/media/WendaT.f60a6efca603ca7775e5.png",
+    "static/media/WendaT.png": "/PhotoTaggingApp/static/media/WendaT.cb535e43b38e8c76030c.png",
     "static/media/WallyT.png": "/PhotoTaggingApp/static/media/WallyT.5ee3099ca896327e1649.png",
     "static/media/undraw_house_searching_re_stk8.svg": "/PhotoTaggingApp/static/media/undraw_house_searching_re_stk8.da5a683e1f901ade8153922d418b9c77.svg",
     "static/media/confetti-doodles.svg": "/PhotoTaggingApp/static/media/confetti-doodles.15db9585353878c6d18702aba29cbe7e.svg",
     "index.html": "/PhotoTaggingApp/index.html",
     "main.a7640163.css.map": "/PhotoTaggingApp/static/css/main.a7640163.css.map",
-    "main.6bb26873.js.map": "/PhotoTaggingApp/static/js/main.6bb26873.js.map",
+    "main.d57bd739.js.map": "/PhotoTaggingApp/static/js/main.d57bd739.js.map",
     "787.6bd778a4.chunk.js.map": "/PhotoTaggingApp/static/js/787.6bd778a4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a7640163.css",
-    "static/js/main.6bb26873.js"
+    "static/js/main.d57bd739.js"
   ]
 }
