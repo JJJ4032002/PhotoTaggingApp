@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
+import useWindowSize from "./useWindowSize";
 
 function useTimer() {
   const [time, setTime] = useState({
@@ -6,10 +7,28 @@ function useTimer() {
     second: 0,
     first: 0,
   });
+  const size = useWindowSize();
+  const [decider, setDecider] = useState(false);
+  useLayoutEffect(() => {
+    if (size[0] < 768) {
+      setDecider(true);
+    } else {
+      setDecider(false);
+    }
+
+    return () => {};
+  }, [size]);
+
   useEffect(() => {
     const interval = setInterval(function () {
       setTime((prev) => {
-        if (prev.second === 5 && prev.first === 9) {
+        if (decider) {
+          return {
+            third: 0,
+            second: 0,
+            first: 0,
+          };
+        } else if (prev.second === 5 && prev.first === 9) {
           return { third: prev.third + 1, second: 0, first: 0 };
         } else if (prev.first === 9) {
           return { ...prev, second: prev.second + 1, first: 0 };
@@ -21,7 +40,7 @@ function useTimer() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [decider]);
 
   return time;
 }
