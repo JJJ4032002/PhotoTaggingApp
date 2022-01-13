@@ -27,8 +27,10 @@ function MainGame() {
   const [validWidth, setValidWidth] = useState(false);
   //State to validate if device has touch screen support or not
   const [validTouch, setValidTouch] = useState(false);
+  const [CharFound, setCharFound] = useState(0);
   //Getting window size.
   const size = useWindowSize();
+
   const time = useTimer();
 
   //Targeting Cursor Image
@@ -40,29 +42,38 @@ function MainGame() {
   //
   const [WindowCoord, setWindowCoord] = useState([]);
   const [selectCoord, setSelectedCood] = useState([]);
+  const [Approve, setApprove] = useState(false);
   function getCharacterData(data) {
     setCharcaterData(data);
   }
-
+  function StartFunction() {
+    setApprove(false);
+  }
+  function MoveFunction() {
+    setApprove(true);
+  }
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
-    let X = 0;
-    let Y = 0;
-    if (validTouch) {
-      console.log(e.target);
+    if (!Approve) {
+      let X = 0;
+      let Y = 0;
 
-      X = e.changedTouches[0].clientX;
-      console.log(e.changedTouches[0].pageY);
-      Y = e.changedTouches[0].pageY;
-    } else {
-      X = e.clientX;
-      Y = e.pageY;
+      if (validTouch) {
+        console.log(e.target);
+
+        X = e.changedTouches[0].clientX;
+        console.log(e.changedTouches[0].pageY);
+        Y = e.changedTouches[0].pageY;
+      } else {
+        X = e.clientX;
+        Y = e.pageY;
+      }
+      setRendCard((parameter) => ({
+        bool: !parameter.bool,
+        X: X,
+        Y: Y,
+      }));
     }
-    setRendCard((parameter) => ({
-      bool: !parameter.bool,
-      X: X,
-      Y: Y,
-    }));
   }
   // Check if card matched.
   function CardClicked(event) {
@@ -80,11 +91,22 @@ function MainGame() {
           selectCoord[1] > element.Coord.XStart &&
           selectCoord[1] < element.Coord.XEnd
         ) {
-          console.log("matched");
+          event.target.parentNode.style["opacity"] = "0.5";
+          event.target.parentNode.style["pointer-events"] = "none";
+          setCharFound((prev) => {
+            return prev + 1;
+          });
         }
       }
     });
   }
+
+  useEffect(() => {
+    if (CharFound === CharacterArr.length) {
+      console.log("All characters selected.");
+    }
+    return () => {};
+  }, [CharFound]);
   // Set current window coordinates according to window width.
   useEffect(() => {
     if (CharacterData) {
@@ -241,6 +263,8 @@ function MainGame() {
             CursorImageEl={CursorImageEl}
             CoordCursor={CoordCursor}
             validTouch={validTouch}
+            StartFunction={StartFunction}
+            MoveFunction={MoveFunction}
           ></PuzzleImage>
           <Card CardClicked={CardClicked} Y={CoordCard}></Card>
         </>

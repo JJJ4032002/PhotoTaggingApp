@@ -8,13 +8,17 @@ function PuzzleImage({
   CoordCursor,
   ImageClicked,
   validTouch,
+  StartFunction,
+  MoveFunction,
 }) {
   return (
     <ImgContainer>
       {validTouch ? (
         <Image
           ref={PuzzleImageEl}
-          onTouchStart={ImageClicked}
+          onTouchStart={StartFunction}
+          onTouchMove={MoveFunction}
+          onTouchEnd={ImageClicked}
           src={source}
         ></Image>
       ) : (
