@@ -5,6 +5,7 @@ import App from "./App";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import MainGame from "./Components/MainGame";
+import LeaderBoard from "./Components/LeaderBoard";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="maingame" element={<MainGame />} />
+        <Route path="leaderboard" element={<LeaderBoard />}></Route>
       </Routes>
     </HashRouter>
   </React.StrictMode>,
