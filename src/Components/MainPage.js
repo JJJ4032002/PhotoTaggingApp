@@ -9,6 +9,7 @@ import {
   Button,
   Image,
   ImgContainer,
+  BoxFlex,
 } from "./MainPageCss";
 
 function MainPage() {
@@ -16,9 +17,14 @@ function MainPage() {
     <FlexContainer>
       <TextContainer>
         <h1>Can you find all the characters in the least time?</h1>
-        <Link to="/maingame">
-          <Button>Play Now</Button>
-        </Link>
+        <BoxFlex>
+          <Link to="/maingame">
+            <Button>Play Now</Button>
+          </Link>
+          <Link to="/leaderboard">
+            <Button>LeaderBoard</Button>
+          </Link>
+        </BoxFlex>
       </TextContainer>
       <ImgContainer>
         <Image src={src}></Image>

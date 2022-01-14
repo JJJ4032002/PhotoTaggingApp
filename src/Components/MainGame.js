@@ -7,6 +7,8 @@ import getDocument from "../Firebase/getDocument";
 import { sizes } from "../Media queries/Queries";
 import useTimer from "../Hooks/useTimer";
 import PuzzleImage from "./MainGameComponents/PuzzleImage";
+import NameCard from "./MainGameComponents/NameCard";
+import sendDocument from "../Firebase/sendDocument";
 import {
   Navbar,
   ImageNav,
@@ -27,7 +29,11 @@ function MainGame() {
   const [validWidth, setValidWidth] = useState(false);
   //State to validate if device has touch screen support or not
   const [validTouch, setValidTouch] = useState(false);
+  //Validates if all characters are found or not.
   const [CharFound, setCharFound] = useState(0);
+  // Revealing the name card after all characters are selected.
+  const [scaleNCard, setScaleNCard] = useState(0);
+
   //Getting window size.
   const size = useWindowSize();
 
@@ -45,8 +51,15 @@ function MainGame() {
   const [selectCoord, setSelectedCood] = useState([]);
   //Allow the character card on screen when screen touched and not on touch move
   const [Approve, setApprove] = useState(false);
+  //Get the player name
+  const [playerName, setPlayerName] = useState("");
+  //Getting the time when both the characters are selected.
+  const [snapshot, setSnapshot] = useState(0);
   function getCharacterData(data) {
     setCharcaterData(data);
+  }
+  function getPlayerName(name) {
+    setPlayerName(name);
   }
   function StartFunction() {
     setApprove(false);
@@ -104,8 +117,23 @@ function MainGame() {
   }
 
   useEffect(() => {
+    if (playerName) {
+      console.log(playerName);
+      console.log(snapshot);
+      sendDocument(playerName, snapshot);
+      setScaleNCard(0);
+    }
+
+    return () => {};
+  }, [playerName]);
+  //Will validate and perform instructions if all characters selected
+  useEffect(() => {
     if (CharFound === CharacterArr.length) {
       console.log("All characters selected.");
+      setScaleNCard(1);
+      setSnapshot(parseFloat(`${time.third}.${time.second}${time.first}`));
+      setCoordCard([-1000, -1000]);
+      setCoordCursor([-1000, -1000]);
     }
     return () => {};
   }, [CharFound]);
@@ -268,6 +296,7 @@ function MainGame() {
             CardClicked={CardClicked}
             Y={CoordCard}
           ></CharacterCard>
+          <NameCard getPlayerName={getPlayerName} scale={scaleNCard}></NameCard>
         </>
       )}
     </Container>

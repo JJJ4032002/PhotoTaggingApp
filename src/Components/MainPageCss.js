@@ -20,6 +20,19 @@ const FlexContainer = styled.div`
     padding: 0em;
   }
 `;
+const BoxFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  justify-content: center;
+  @media ${devices.mobileS} {
+    flex-direction: row;
+    justify-content: center;
+  }
+  @media ${devices.laptop} {
+    justify-content: start;
+  }
+`;
 const TextContainer = styled.div`
   width: 100%;
   font-size: clamp(0.9rem, 2.5vw, 1.3rem);
@@ -61,4 +74,4 @@ const Button = styled.button`
   }
 `;
 
-export { FlexContainer, TextContainer, Button, Image, ImgContainer };
+export { FlexContainer, TextContainer, Button, Image, ImgContainer, BoxFlex };
