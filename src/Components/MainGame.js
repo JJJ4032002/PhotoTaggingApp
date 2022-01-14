@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import Wally from "../Images/WallyT.png";
 import Wenda from "../Images/WendaT.png";
-import Card from "./MainGameComponents/Card";
+import CharacterCard from "./MainGameComponents/CharacterCard";
 import useWindowSize from "../Hooks/useWindowSize";
 import getDocument from "../Firebase/getDocument";
 import { sizes } from "../Media queries/Queries";
@@ -39,9 +39,11 @@ function MainGame() {
   const PuzzleImageEl = useRef(null);
   //State to get character data.
   const [CharacterData, setCharcaterData] = useState("");
-  //
+  // The character coordinates for the current window.
   const [WindowCoord, setWindowCoord] = useState([]);
+  //The coordinates that we get on selection.
   const [selectCoord, setSelectedCood] = useState([]);
+  //Allow the character card on screen when screen touched and not on touch move
   const [Approve, setApprove] = useState(false);
   function getCharacterData(data) {
     setCharcaterData(data);
@@ -197,11 +199,7 @@ function MainGame() {
   }, []);
 
   useEffect(() => {
-    console.log(window.innerHeight, window.innerWidth);
-    const widthScreen = window.innerWidth;
-    if (widthScreen < Number(sizes.laptopL.split("px")[0])) {
-      getDocument("Coordinates", getCharacterData);
-    }
+    getDocument("Coordinates", getCharacterData);
   }, []);
   //Runs when rendcard is changed bringing marker and card on screen.
   useEffect(() => {
@@ -266,7 +264,10 @@ function MainGame() {
             StartFunction={StartFunction}
             MoveFunction={MoveFunction}
           ></PuzzleImage>
-          <Card CardClicked={CardClicked} Y={CoordCard}></Card>
+          <CharacterCard
+            CardClicked={CardClicked}
+            Y={CoordCard}
+          ></CharacterCard>
         </>
       )}
     </Container>

@@ -1,9 +1,15 @@
 import React from "react";
 import CharacterArr from "./Character";
 
-import { InnerDiv, InnerFlex, CardBody, ImageDiv, Para } from "./CardCss";
+import {
+  InnerDiv,
+  InnerFlex,
+  CardBody,
+  ImageDiv,
+  Para,
+} from "./CharacterCardCss";
 
-function Card({ Y, CardClicked }) {
+function CharacterCard({ Y, CardClicked }) {
   return (
     <CardBody Y={Y}>
       <InnerFlex>
@@ -20,4 +26,4 @@ function Card({ Y, CardClicked }) {
   );
 }
 
-export default Card;
+export default CharacterCard;
