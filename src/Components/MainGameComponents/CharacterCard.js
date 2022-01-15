@@ -9,13 +9,17 @@ import {
   Para,
 } from "./CharacterCardCss";
 
-function CharacterCard({ Y, CardClicked }) {
+function CharacterCard({ Y, CardClicked, reference }) {
   return (
     <CardBody Y={Y}>
       <InnerFlex>
         {CharacterArr.map((char) => {
           return (
-            <InnerDiv onClick={CardClicked} key={char.id}>
+            <InnerDiv
+              ref={(el) => (reference.current[`${char.CharName}`] = el)}
+              onClick={CardClicked}
+              key={char.id}
+            >
               <ImageDiv id={char.CharName} src={char.src}></ImageDiv>
               <Para>{char.CharName}</Para>
             </InnerDiv>
