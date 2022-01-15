@@ -9,7 +9,8 @@ function NameCard({ scale, getPlayerName }) {
       return e.target.value;
     });
   }
-  function Submitted() {
+  function Submitted(e) {
+    e.preventDefault();
     if (currentVal === "") {
       alert("Please enter your name");
     } else {
@@ -22,6 +23,8 @@ function NameCard({ scale, getPlayerName }) {
       <Form>
         <Input onChange={ChangeVal} value={currentVal}></Input>
         <NameCardBtn onClick={Submitted}>Submit</NameCardBtn>
+        <NameCardBtn>Restart</NameCardBtn>
+        <NameCardBtn>LeaderBoard</NameCardBtn>
       </Form>
     </CardBody>
   );
