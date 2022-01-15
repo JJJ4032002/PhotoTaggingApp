@@ -2,20 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { HashRouter, Routes, Route } from "react-router-dom";
+
 import reportWebVitals from "./reportWebVitals";
-import MainGame from "./Components/MainGame";
-import LeaderBoard from "./Components/LeaderBoard";
 
 ReactDOM.render(
   <React.StrictMode>
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="maingame" element={<MainGame />} />
-        <Route path="leaderboard" element={<LeaderBoard />}></Route>
-      </Routes>
-    </HashRouter>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
