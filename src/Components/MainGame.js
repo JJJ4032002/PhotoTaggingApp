@@ -33,7 +33,8 @@ function MainGame() {
   const [CharFound, setCharFound] = useState(0);
   // Revealing the name card after all characters are selected.
   const [scaleNCard, setScaleNCard] = useState(0);
-
+  //Selecting the characters.
+  const inputRef = useRef({});
   //Getting window size.
   const size = useWindowSize();
 
@@ -106,8 +107,8 @@ function MainGame() {
           selectCoord[1] > element.Coord.XStart &&
           selectCoord[1] < element.Coord.XEnd
         ) {
-          event.target.parentNode.style["opacity"] = "0.5";
-          event.target.parentNode.style["pointer-events"] = "none";
+          inputRef.current[`${charName}`].style["opacity"] = "0.5";
+          inputRef.current[`${charName}`].style["pointer-events"] = "none";
           setCharFound((prev) => {
             return prev + 1;
           });
@@ -121,7 +122,6 @@ function MainGame() {
       console.log(playerName);
       console.log(snapshot);
       sendDocument(playerName, snapshot);
-      setScaleNCard(0);
     }
 
     return () => {};
@@ -293,6 +293,7 @@ function MainGame() {
             MoveFunction={MoveFunction}
           ></PuzzleImage>
           <CharacterCard
+            reference={inputRef}
             CardClicked={CardClicked}
             Y={CoordCard}
           ></CharacterCard>
