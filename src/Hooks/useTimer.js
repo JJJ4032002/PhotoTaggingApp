@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from "react";
 import useWindowSize from "./useWindowSize";
 
-function useTimer() {
+function useTimer(restart) {
   const [time, setTime] = useState({
     third: 0,
     second: 0,
@@ -18,6 +18,13 @@ function useTimer() {
 
     return () => {};
   }, [size]);
+
+  useEffect(() => {
+    if (restart > 0) {
+      setTime({ third: 0, second: 0, first: 0 });
+    }
+    return () => {};
+  }, [restart]);
 
   useEffect(() => {
     const interval = setInterval(function () {
