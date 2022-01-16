@@ -9,6 +9,8 @@ import useTimer from "../Hooks/useTimer";
 import PuzzleImage from "./MainGameComponents/PuzzleImage";
 import NameCard from "./MainGameComponents/NameCard";
 import sendDocument from "../Firebase/sendDocument";
+import delDocument from "../Firebase/delDocument";
+
 import {
   Navbar,
   ImageNav,
@@ -18,7 +20,7 @@ import {
 } from "./MainGameCss";
 import CharacterArr from "./MainGameComponents/Character";
 
-function MainGame() {
+function MainGame({ UpdateData, user, getUser }) {
   //State to bring card on screen when clicked.
   const [CoordCard, setCoordCard] = useState([-1000, -1000]);
   //State to bring marker on screen when image clicked.
@@ -35,10 +37,8 @@ function MainGame() {
   const [scaleNCard, setScaleNCard] = useState(0);
   //Selecting the characters.
   const inputRef = useRef({});
-  //Getting window size.
-  const size = useWindowSize();
-
-  const time = useTimer();
+  //Reference to the Submit button
+  const SubBtnRef = useRef(null);
 
   //Targeting Cursor Image
   const CursorImageEl = useRef(null);
@@ -56,17 +56,42 @@ function MainGame() {
   const [playerName, setPlayerName] = useState("");
   //Getting the time when both the characters are selected.
   const [snapshot, setSnapshot] = useState(0);
+  //To restart the pages;
+  const [restart, setRestart] = useState(0);
+
+  //Getting window size.
+  const size = useWindowSize();
+
+  const time = useTimer(restart);
+
+  //Getting the character data
   function getCharacterData(data) {
     setCharcaterData(data);
   }
+  //Getting the playerName
   function getPlayerName(name) {
     setPlayerName(name);
   }
+  //Touch Functions
   function StartFunction() {
     setApprove(false);
   }
   function MoveFunction() {
     setApprove(true);
+  }
+  //Restart the game
+  function Restart(e) {
+    e.preventDefault();
+    setRestart((prev) => {
+      return prev + 1;
+    });
+    CharacterArr.forEach((element) => {
+      inputRef.current[`${element.CharName}`].style["opacity"] = "1";
+      inputRef.current[`${element.CharName}`].style["pointer-events"] = "auto";
+    });
+    SubBtnRef.current.style["opacity"] = "1";
+    SubBtnRef.current.style["pointer-events"] = "auto";
+    setScaleNCard(0);
   }
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
@@ -122,6 +147,7 @@ function MainGame() {
       console.log(playerName);
       console.log(snapshot);
       sendDocument(playerName, snapshot);
+      UpdateData();
     }
 
     return () => {};
@@ -132,8 +158,12 @@ function MainGame() {
       console.log("All characters selected.");
       setScaleNCard(1);
       setSnapshot(parseFloat(`${time.third}.${time.second}${time.first}`));
-      setCoordCard([-1000, -1000]);
-      setCoordCursor([-1000, -1000]);
+      setRendCard((parameter) => ({
+        bool: !parameter.bool,
+        X: 0,
+        Y: 0,
+      }));
+      setCharFound(0);
     }
     return () => {};
   }, [CharFound]);
@@ -207,13 +237,23 @@ function MainGame() {
     console.log("lay1");
     if (size[0] < 768) {
       setValidWidth(true);
+      if (!user) {
+        console.log("worked");
+        sendDocument(undefined, getUser);
+      }
     } else {
       setValidWidth(false);
+      if (user) {
+        delDocument(user, getUser);
+      }
     }
 
-    return () => {};
+    return () => {
+      console.log("window resized");
+    };
   }, [size]);
 
+  //Setting the image for touch screen.
   useLayoutEffect(() => {
     console.log("lay2");
     if (window.matchMedia("(pointer: coarse)").matches) {
@@ -225,9 +265,15 @@ function MainGame() {
     }
     return () => {};
   }, []);
-
+  //Getting the character data
   useEffect(() => {
     getDocument("Coordinates", getCharacterData);
+    return () => {
+      if (user) {
+        console.log("hello");
+        delDocument(user, getUser);
+      }
+    };
   }, []);
   //Runs when rendcard is changed bringing marker and card on screen.
   useEffect(() => {
@@ -297,7 +343,12 @@ function MainGame() {
             CardClicked={CardClicked}
             Y={CoordCard}
           ></CharacterCard>
-          <NameCard getPlayerName={getPlayerName} scale={scaleNCard}></NameCard>
+          <NameCard
+            getPlayerName={getPlayerName}
+            Restart={Restart}
+            scale={scaleNCard}
+            BtnReference={SubBtnRef}
+          ></NameCard>
         </>
       )}
     </Container>
