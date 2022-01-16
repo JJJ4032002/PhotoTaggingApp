@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import background from "../Images/confetti-doodles.svg";
-import getCollection from "../Firebase/getCollection";
+
+import { v4 as uuidv4 } from "uuid";
 const FlexContainer = styled.div`
   min-height: 100vh;
   display: flex;
@@ -25,30 +26,34 @@ const InnerFlex = styled.div`
 const FlexItems = styled.div`
   width: 50%;
 `;
-function LeaderBoard() {
-  const [data, setData] = useState([]);
+function LeaderBoard({ data, complete }) {
+  let [sortedData, setSortedData] = useState([]);
   useEffect(() => {
-    getCollection(DataAdded);
-    return () => {};
-  }, []);
-  function DataAdded(data) {
-    setData((prev) => {
-      return [...prev, data];
-    });
-  }
+    console.log("hello");
+    if (data.length > 1) {
+      console.log("hmm");
+      let newData = [...data].sort((a, b) => {
+        return a.timeStamp - b.timeStamp;
+      });
+      setSortedData(newData);
+    } else {
+      setSortedData(data);
+    }
+  }, [complete]);
+
   return (
     <FlexContainer>
       <LeaderBoardBody>
         <h1>Leaderboard</h1>
         <InnerFlex>
           <FlexItems>
-            {data.map((ele) => {
-              return <h2 key={ele.id}>{ele.playerName}</h2>;
+            {sortedData.map((ele) => {
+              return <h2 key={uuidv4()}>{ele.playerName}</h2>;
             })}
           </FlexItems>
           <FlexItems>
-            {data.map((ele) => {
-              return <h2 key={ele.id}>{ele.timeStamp}</h2>;
+            {sortedData.map((ele) => {
+              return <h2 key={uuidv4()}>{ele.timeStamp}</h2>;
             })}
           </FlexItems>
         </InnerFlex>
