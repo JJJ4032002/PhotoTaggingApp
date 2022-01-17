@@ -10,6 +10,7 @@ import PuzzleImage from "./MainGameComponents/PuzzleImage";
 import NameCard from "./MainGameComponents/NameCard";
 import sendDocument from "../Firebase/sendDocument";
 import delDocument from "../Firebase/delDocument";
+import updateDocument from "../Firebase/updateDocument";
 
 import {
   Navbar,
@@ -20,7 +21,7 @@ import {
 } from "./MainGameCss";
 import CharacterArr from "./MainGameComponents/Character";
 
-function MainGame({ UpdateData, user, getUser }) {
+function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //State to bring card on screen when clicked.
   const [CoordCard, setCoordCard] = useState([-1000, -1000]);
   //State to bring marker on screen when image clicked.
@@ -92,6 +93,8 @@ function MainGame({ UpdateData, user, getUser }) {
     SubBtnRef.current.style["opacity"] = "1";
     SubBtnRef.current.style["pointer-events"] = "auto";
     setScaleNCard(0);
+    delDocument(user, getUser);
+    sendDocument(undefined, getUser);
   }
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
@@ -146,8 +149,11 @@ function MainGame({ UpdateData, user, getUser }) {
     if (playerName) {
       console.log(playerName);
       console.log(snapshot);
-      sendDocument(playerName, snapshot);
-      UpdateData();
+      updateDocument(user, "playerName", playerName);
+      getUser("");
+      setTimeout(() => {
+        UpdateData();
+      }, 500);
     }
 
     return () => {};
@@ -164,6 +170,7 @@ function MainGame({ UpdateData, user, getUser }) {
         Y: 0,
       }));
       setCharFound(0);
+      updateDocument(user, "endTimestamp");
     }
     return () => {};
   }, [CharFound]);
@@ -269,10 +276,7 @@ function MainGame({ UpdateData, user, getUser }) {
   useEffect(() => {
     getDocument("Coordinates", getCharacterData);
     return () => {
-      if (user) {
-        console.log("hello");
-        delDocument(user, getUser);
-      }
+      UserDelete();
     };
   }, []);
   //Runs when rendcard is changed bringing marker and card on screen.
