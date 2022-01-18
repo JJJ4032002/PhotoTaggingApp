@@ -12,9 +12,11 @@ const Navbar = styled.nav`
   justify-content: space-around;
   align-items: center;
   height: 12vh;
+  max-height: 170px;
   width: 100%;
   @media ${devices.laptop} {
     height: 15vh;
+    max-height: 170px;
   }
 `;
 const NotValidHead = styled.h3`
@@ -31,13 +33,14 @@ const Container = styled.div`
 
 const ImageNav = styled.img`
   height: 100%;
+  max-height: 60px;
 `;
 
 const InnerDiv = styled.div`
   display: flex;
   height: 100%;
   align-items: center;
-  width: 20%;
+  width: 25%;
 `;
 
 export { Navbar, ImageNav, Container, NotValidHead, InnerDiv };

@@ -20,6 +20,7 @@ import {
   InnerDiv,
 } from "./MainGameCss";
 import CharacterArr from "./MainGameComponents/Character";
+import { Heading } from "./MainGameComponents/NameCardCss";
 
 function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //State to bring card on screen when clicked.
@@ -93,7 +94,10 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     SubBtnRef.current.style["opacity"] = "1";
     SubBtnRef.current.style["pointer-events"] = "auto";
     setScaleNCard(0);
-    delDocument(user, getUser);
+    if (user) {
+      delDocument(user, getUser);
+    }
+
     sendDocument(undefined, getUser);
   }
   //Function is called when a particular place in page is clicked
@@ -244,14 +248,16 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     console.log("lay1");
     if (size[0] < 768) {
       setValidWidth(true);
-      if (!user) {
-        console.log("worked");
-        sendDocument(undefined, getUser);
+      if (user) {
+        console.log("runs");
+        delDocument(user, getUser);
       }
     } else {
       setValidWidth(false);
-      if (user) {
-        delDocument(user, getUser);
+
+      if (!user) {
+        console.log("worked");
+        sendDocument(undefined, getUser);
       }
     }
 
@@ -324,12 +330,12 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
         <>
           <Navbar>
             <InnerDiv>
-              <h1>Find :</h1>
+              <Heading>Find :</Heading>
               <ImageNav src={Wally}></ImageNav>
               <ImageNav src={Wenda}></ImageNav>
             </InnerDiv>
             <InnerDiv>
-              <h1>{`${time.third}.${time.second}${time.first}`}</h1>
+              <Heading>{`${time.third}.${time.second}${time.first}`}</Heading>
             </InnerDiv>
           </Navbar>
 
