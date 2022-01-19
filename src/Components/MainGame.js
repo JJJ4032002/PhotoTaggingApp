@@ -83,6 +83,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   }
   //Restart the game
   function Restart(e) {
+    console.log("Restarting the game");
     e.preventDefault();
     setRestart((prev) => {
       return prev + 1;
@@ -102,6 +103,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   }
   //Function is called when a particular place in page is clicked
   function ImageClicked(e) {
+    console.log("The large image is clicked");
     if (!Approve) {
       let X = 0;
       let Y = 0;
@@ -125,6 +127,9 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   }
   // Check if card matched.
   function CardClicked(event) {
+    console.log(
+      "Mathing the distances if they are correct enought to select the character"
+    );
     let charName = "";
     if (event.target.id) {
       charName = event.target.id;
@@ -139,6 +144,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
           selectCoord[1] > element.Coord.XStart &&
           selectCoord[1] < element.Coord.XEnd
         ) {
+          console.log("character matched");
           inputRef.current[`${charName}`].style["opacity"] = "0.5";
           inputRef.current[`${charName}`].style["pointer-events"] = "none";
           setCharFound((prev) => {
@@ -151,6 +157,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
 
   useEffect(() => {
     if (playerName) {
+      console.log("Got the playerName and updated the document");
       console.log(playerName);
       console.log(snapshot);
       updateDocument(user, "playerName", playerName);
@@ -182,6 +189,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   useEffect(() => {
     if (CharacterData) {
       //Discarding the previous coordinates
+      console.log("Set the window result coordinates");
       setWindowCoord([]);
       for (let i = 0; i < CharacterArr.length; i++) {
         if (size[0] < Number(sizes.laptop.split("px")[0])) {
@@ -245,18 +253,19 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   }, [size, CharacterData]);
   //Check the window width and decide if the level is playable or not.
   useLayoutEffect(() => {
+    console.log("Setting up the game according to the window width");
     console.log("lay1");
     if (size[0] < 768) {
       setValidWidth(true);
       if (user) {
-        console.log("runs");
+        console.log("Deleting the user");
         delDocument(user, getUser);
       }
     } else {
       setValidWidth(false);
 
       if (!user) {
-        console.log("worked");
+        console.log("Set up the Anonymous user");
         sendDocument(undefined, getUser);
       }
     }
@@ -268,12 +277,12 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
 
   //Setting the image for touch screen.
   useLayoutEffect(() => {
-    console.log("lay2");
     if (window.matchMedia("(pointer: coarse)").matches) {
       // touchscreen
       console.log("Touch screen");
       setValidTouch(true);
     } else {
+      console.log("PC");
       setValidTouch(false);
     }
     return () => {};
@@ -281,24 +290,31 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //Getting the character data
   useEffect(() => {
     getDocument("Coordinates", getCharacterData);
+    console.log("Got the character Data");
     return () => {
+      console.log(
+        "Deleting the user as they changed the page without saving the name"
+      );
       UserDelete();
     };
   }, []);
   //Runs when rendcard is changed bringing marker and card on screen.
   useEffect(() => {
-    console.log("hey");
+    console.log("Setting the Round Cusor and card as screen was clicked");
     if (RendCard.bool) {
       setCoordCard([+RendCard.X - 60, +RendCard.Y - 120]);
       setCoordCursor([+RendCard.X - 35, +RendCard.Y - 35]);
     } else {
+      console.log("Removing the circle cursor and card");
       setCoordCard([-1000, -1000]);
       setCoordCursor([-1000, -1000]);
     }
   }, [RendCard]);
   //Getting the coordinates of the character with repsect to the card.
   useEffect(() => {
-    console.log("hmm");
+    console.log(
+      "Now on clicking the large picture Calculating the distance of the point with respect to the large image"
+    );
     if (RendCard.bool) {
       console.log(window.scrollY);
       let rect = CursorImageEl.current.getBoundingClientRect();

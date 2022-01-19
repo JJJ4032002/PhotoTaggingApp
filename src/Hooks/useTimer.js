@@ -7,6 +7,7 @@ function useTimer(restart) {
     second: 0,
     first: 0,
   });
+
   const size = useWindowSize();
   const [decider, setDecider] = useState(false);
   useLayoutEffect(() => {
