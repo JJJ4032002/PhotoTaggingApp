@@ -17,17 +17,19 @@ const LeaderBoardBody = styled.div`
   text-align: center;
   font-family: "Indie Flower";
 `;
-const InnerFlex = styled.div`
-  display: flex;
+const InnerGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: auto;
   width: 90%;
   margin: 1em auto;
+  align-items: center;
 `;
-const FlexItems = styled.div`
-  width: 50%;
-`;
+
 const Heading = styled.h1`
   display: block;
   font-size: clamp(1rem, 2vw, 1.5rem);
+  padding: 0.5em 0em;
 `;
 const FlexInnerContainer = styled.div`
   display: flex;
@@ -44,7 +46,6 @@ export {
   ButtonL,
   FlexInnerContainer,
   Heading,
-  FlexItems,
-  InnerFlex,
+  InnerGrid,
   LeaderBoardBody,
 };

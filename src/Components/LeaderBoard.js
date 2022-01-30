@@ -8,8 +8,7 @@ import {
   ButtonL,
   FlexInnerContainer,
   Heading,
-  FlexItems,
-  InnerFlex,
+  InnerGrid,
   LeaderBoardBody,
 } from "./LeaderBoardCss";
 
@@ -51,18 +50,16 @@ function LeaderBoard({ data, complete }) {
             <ButtonL>Home Page</ButtonL>
           </Link>
         </FlexInnerContainer>
-        <InnerFlex>
-          <FlexItems>
-            {sortedData.map((ele) => {
-              return <Heading key={uuidv4()}>{ele.playerName}</Heading>;
-            })}
-          </FlexItems>
-          <FlexItems>
-            {sortedData.map((ele) => {
-              return <Heading key={uuidv4()}>{ele.timestamp}</Heading>;
-            })}
-          </FlexItems>
-        </InnerFlex>
+        <InnerGrid>
+          {sortedData.map((ele) => {
+            return (
+              <>
+                <Heading key={uuidv4()}>{ele.playerName}</Heading>
+                <Heading key={uuidv4()}>{ele.timestamp}</Heading>
+              </>
+            );
+          })}
+        </InnerGrid>
       </LeaderBoardBody>
     </FlexContainer>
   );
