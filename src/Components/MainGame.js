@@ -21,6 +21,8 @@ import {
 } from "./MainGameCss";
 import CharacterArr from "./MainGameComponents/Character";
 import { Heading } from "./MainGameComponents/NameCardCss";
+import ScreenTypeValidator from "./helpers/ScreenTypeValidator";
+import WindowWidthCoordinator from "./helpers/WindowWidthCoordinator";
 
 function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //State to bring card on screen when clicked.
@@ -154,7 +156,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
       }
     });
   }
-
+  //Runs after the character is found
   useEffect(() => {
     if (playerName) {
       console.log("Got the playerName and updated the document");
@@ -190,65 +192,13 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     if (CharacterData) {
       //Discarding the previous coordinates
       console.log("Set the window result coordinates");
-      setWindowCoord([]);
-      for (let i = 0; i < CharacterArr.length; i++) {
-        if (size[0] < Number(sizes.laptop.split("px")[0])) {
-          setWindowCoord((prevItems) => {
-            return [
-              ...prevItems,
-              {
-                CharName: CharacterArr[i].CharName,
-                Coord:
-                  CharacterData[`${CharacterArr[i].CharName}Coord`][
-                    "TabletCoord"
-                  ],
-              },
-            ];
-          });
-        } else if (size[0] < Number(sizes.laptopL.split("px")[0])) {
-          setWindowCoord((prevItems) => {
-            return [
-              ...prevItems,
-
-              {
-                CharName: CharacterArr[i].CharName,
-                Coord:
-                  CharacterData[`${CharacterArr[i].CharName}Coord`][
-                    "LaptopCoord"
-                  ],
-              },
-            ];
-          });
-        } else if (size[0] < Number(sizes.desktop.split("px")[0])) {
-          setWindowCoord((prevItems) => {
-            return [
-              ...prevItems,
-
-              {
-                CharName: CharacterArr[i].CharName,
-                Coord:
-                  CharacterData[`${CharacterArr[i].CharName}Coord`][
-                    "LaptopLCoord"
-                  ],
-              },
-            ];
-          });
-        } else {
-          setWindowCoord((prevItems) => {
-            return [
-              ...prevItems,
-
-              {
-                CharName: CharacterArr[i].CharName,
-                Coord:
-                  CharacterData[`${CharacterArr[i].CharName}Coord`][
-                    "DesktopCoord"
-                  ],
-              },
-            ];
-          });
-        }
-      }
+      WindowWidthCoordinator(
+        setWindowCoord,
+        CharacterData,
+        CharacterArr,
+        size,
+        sizes
+      );
     }
   }, [size, CharacterData]);
   //Check the window width and decide if the level is playable or not.
@@ -277,14 +227,8 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
 
   //Setting the image for touch screen.
   useLayoutEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) {
-      // touchscreen
-      console.log("Touch screen");
-      setValidTouch(true);
-    } else {
-      console.log("PC");
-      setValidTouch(false);
-    }
+    ScreenTypeValidator(setValidTouch);
+
     return () => {};
   }, []);
   //Getting the character data
