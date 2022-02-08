@@ -11,7 +11,6 @@ import NameCard from "./MainGameComponents/NameCard";
 import sendDocument from "../Firebase/sendDocument";
 import delDocument from "../Firebase/delDocument";
 import updateDocument from "../Firebase/updateDocument";
-
 import {
   Navbar,
   ImageNav,
@@ -38,7 +37,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //Validates if all characters are found or not.
   const [CharFound, setCharFound] = useState(0);
   // Revealing the name card after all characters are selected.
-  const [scaleNCard, setScaleNCard] = useState(0);
+  const [scaleSubmitCard, setScaleSubmitCard] = useState(0);
   //Selecting the characters.
   const inputRef = useRef({});
   //Reference to the Submit button
@@ -55,17 +54,16 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   //The coordinates that we get on selection.
   const [selectCoord, setSelectedCood] = useState([]);
   //Allow the character card on screen when screen touched and not on touch move
-  const [Approve, setApprove] = useState(false);
+  const [ApproveOnTouch, setApproveOnTouch] = useState(false);
   //Get the player name
   const [playerName, setPlayerName] = useState("");
-  //Getting the time when both the characters are selected.
-  const [snapshot, setSnapshot] = useState(0);
+
   //To restart the pages;
   const [restart, setRestart] = useState(0);
 
   //Getting window size.
   const size = useWindowSize();
-
+  //Timer
   const time = useTimer(restart);
 
   //Getting the character data
@@ -78,10 +76,10 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   }
   //Touch Functions
   function StartFunction() {
-    setApprove(false);
+    setApproveOnTouch(false);
   }
   function MoveFunction() {
-    setApprove(true);
+    setApproveOnTouch(true);
   }
   //Restart the game
   function Restart(e) {
@@ -96,7 +94,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     });
     SubBtnRef.current.style["opacity"] = "1";
     SubBtnRef.current.style["pointer-events"] = "auto";
-    setScaleNCard(0);
+    setScaleSubmitCard(0);
     if (user) {
       delDocument(user, getUser);
     }
@@ -104,9 +102,9 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     sendDocument(undefined, getUser);
   }
   //Function is called when a particular place in page is clicked
-  function ImageClicked(e) {
+  function handleImageClicked(e) {
     console.log("The large image is clicked");
-    if (!Approve) {
+    if (!ApproveOnTouch) {
       let X = 0;
       let Y = 0;
 
@@ -161,7 +159,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
     if (playerName) {
       console.log("Got the playerName and updated the document");
       console.log(playerName);
-      console.log(snapshot);
+
       updateDocument(user, "playerName", playerName);
       getUser("");
       setTimeout(() => {
@@ -175,8 +173,8 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
   useEffect(() => {
     if (CharFound === CharacterArr.length) {
       console.log("All characters selected.");
-      setScaleNCard(1);
-      setSnapshot(parseFloat(`${time.third}.${time.second}${time.first}`));
+      setScaleSubmitCard(1);
+
       setRendCard((parameter) => ({
         bool: !parameter.bool,
         X: 0,
@@ -301,7 +299,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
 
           <PuzzleImage
             PuzzleImageEl={PuzzleImageEl}
-            ImageClicked={ImageClicked}
+            handleImageClicked={handleImageClicked}
             CursorImageEl={CursorImageEl}
             CoordCursor={CoordCursor}
             validTouch={validTouch}
@@ -316,7 +314,7 @@ function MainGame({ UpdateData, user, getUser, UserDelete }) {
           <NameCard
             getPlayerName={getPlayerName}
             Restart={Restart}
-            scale={scaleNCard}
+            scale={scaleSubmitCard}
             BtnReference={SubBtnRef}
           ></NameCard>
         </>

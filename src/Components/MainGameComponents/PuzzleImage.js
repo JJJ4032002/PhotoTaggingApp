@@ -6,7 +6,7 @@ function PuzzleImage({
   PuzzleImageEl,
   CursorImageEl,
   CoordCursor,
-  ImageClicked,
+  handleImageClicked,
   validTouch,
   StartFunction,
   MoveFunction,
@@ -18,11 +18,15 @@ function PuzzleImage({
           ref={PuzzleImageEl}
           onTouchStart={StartFunction}
           onTouchMove={MoveFunction}
-          onTouchEnd={ImageClicked}
+          onTouchEnd={handleImageClicked}
           src={source}
         ></Image>
       ) : (
-        <Image ref={PuzzleImageEl} onClick={ImageClicked} src={source}></Image>
+        <Image
+          ref={PuzzleImageEl}
+          onClick={handleImageClicked}
+          src={source}
+        ></Image>
       )}
       <AbsImage ref={CursorImageEl} IO={CoordCursor} src={cursor}></AbsImage>
     </ImgContainer>
