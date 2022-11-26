@@ -1,22 +1,18 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "./InitializeFirebase";
 
-async function getCollection(DataFunction, Reminder) {
+async function getCollection() {
   const querySnapshot = await getDocs(collection(db, "Level1"));
-  querySnapshot.forEach((doc) => {
+  let data = querySnapshot.docs.map((doc) => {
     if (doc.data().playerName === "Anonymous") {
-      console.log("deleted");
-
-      DataFunction({ ...doc.data(), AnonId: doc.id });
+      return { ...doc.data(), AnonId: doc.id };
     } else {
-      console.log("else");
-      DataFunction({ ...doc.data() });
+      return { ...doc.data() };
     }
 
     // doc.data() is never undefined for query doc snapshots
   });
-  console.log("bruh");
-  Reminder();
+  return data;
 }
 
 export default getCollection;

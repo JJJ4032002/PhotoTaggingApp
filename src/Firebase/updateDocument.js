@@ -3,9 +3,9 @@ import { db } from "./InitializeFirebase";
 import { serverTimestamp } from "firebase/firestore";
 async function updateDocument(id, key, value) {
   const PlayerDoc = doc(db, "Level1", id);
-
-  await updateDoc(PlayerDoc, {
+  let resp = await updateDoc(PlayerDoc, {
     [key]: value || serverTimestamp(),
   });
+  return resp;
 }
 export default updateDocument;

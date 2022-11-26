@@ -1,9 +1,9 @@
+import { sizes } from "../../Media queries/Queries";
 function WindowWidthCoordinator(
   windowWidthSetter,
   CharacterData,
   CharacterArr,
-  size,
-  sizes
+  size
 ) {
   console.log("Set the window result coordinates");
   windowWidthSetter([]);
