@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, Fragment } from "react";
 import { v4 as uuidv4 } from "uuid";
 import delDocument from "../Firebase/delDocument";
 import { Link } from "react-router-dom";
@@ -12,34 +11,32 @@ import {
   LeaderBoardBody,
 } from "./LeaderBoardCss";
 
-function LeaderBoard({ data, complete }) {
+function LeaderBoard({ data }) {
   let [sortedData, setSortedData] = useState([]);
-
-  useEffect(() => {
-    console.log("hello");
-    if ([...data].length > 0) {
-      console.log("hmm");
-      let filteredData = [...data].filter((ele) => {
-        if (ele.AnonId) {
-          delDocument(ele.AnonId, undefined);
-          return false;
-        } else {
-          return true;
-        }
-      });
-
-      if ([...data].length > 1) {
-        console.log("hmm");
-
-        let newData = [...filteredData].sort((a, b) => {
-          return a.timestamp - b.timestamp;
-        });
-        setSortedData([...newData]);
+  let [prevData, setPrevData] = useState([]);
+  if (prevData !== data && [...data].length > 0) {
+    console.log("hmm");
+    let filteredData = [...data].filter((ele) => {
+      if (ele.AnonId) {
+        delDocument(ele.AnonId, undefined);
+        return false;
       } else {
-        setSortedData([...filteredData]);
+        return true;
       }
+    });
+
+    if ([...data].length > 1) {
+      console.log("hmm");
+
+      let newData = [...filteredData].sort((a, b) => {
+        return a.timestamp - b.timestamp;
+      });
+      setSortedData([...newData]);
+    } else {
+      setSortedData([...filteredData]);
     }
-  }, [complete]);
+    setPrevData(data);
+  }
 
   return (
     <FlexContainer>
@@ -53,10 +50,10 @@ function LeaderBoard({ data, complete }) {
         <InnerGrid>
           {sortedData.map((ele) => {
             return (
-              <>
-                <Heading key={uuidv4()}>{ele.playerName}</Heading>
-                <Heading key={uuidv4()}>{ele.timestamp}</Heading>
-              </>
+              <Fragment key={uuidv4()}>
+                <Heading>{ele.playerName}</Heading>
+                <Heading>{ele.timestamp}</Heading>
+              </Fragment>
             );
           })}
         </InnerGrid>
