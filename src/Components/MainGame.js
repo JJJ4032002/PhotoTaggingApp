@@ -54,13 +54,11 @@ function MainGame({ user, getUser }) {
   //Allow the character card on screen when screen touched and not on touch move
   const [ApproveOnTouch, setApproveOnTouch] = useState(false);
   const [currentDocument, setCurrentDocument] = useState(null);
-  //To restart the pages;
-  const [restart, setRestart] = useState(0);
 
   //Getting window size.
   const size = useWindowSize();
   //Timer
-  const time = useTimer(restart);
+  const { time, restartFunc } = useTimer();
   function getCurrentDocument(data) {
     setCurrentDocument(data);
   }
@@ -88,9 +86,7 @@ function MainGame({ user, getUser }) {
   //Restart the game
   function Restart(e) {
     e.preventDefault();
-    setRestart((prev) => {
-      return prev + 1;
-    });
+    restartFunc();
     CharacterArr.forEach((element) => {
       inputRef.current[`${element.CharName}`].style["opacity"] = "1";
       inputRef.current[`${element.CharName}`].style["pointer-events"] = "auto";
