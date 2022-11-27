@@ -1,4 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
+import { motion } from "framer-motion";
 import { v4 as uuidv4 } from "uuid";
 import delDocument from "../Firebase/delDocument";
 import { Link } from "react-router-dom";
@@ -44,7 +45,14 @@ function LeaderBoard({ data }) {
         <FlexInnerContainer>
           <Heading>Leaderboard</Heading>
           <Link to="/">
-            <ButtonL>Home Page</ButtonL>
+            <ButtonL
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              whileTap={{ scale: 0.95 }}
+              as={motion.div}
+            >
+              Home Page
+            </ButtonL>
           </Link>
         </FlexInnerContainer>
         <InnerGrid>

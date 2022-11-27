@@ -1,7 +1,6 @@
 import React from "react";
-
 import src from "../Images/undraw_house_searching_re_stk8.svg";
-
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   FlexContainer,
@@ -19,10 +18,24 @@ function MainPage() {
         <h1>Can you find all the characters in the least time?</h1>
         <BoxFlex>
           <Link to="/maingame">
-            <Button>Play Now</Button>
+            <Button
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              whileTap={{ scale: 0.95 }}
+              as={motion.div}
+            >
+              Play Now
+            </Button>
           </Link>
           <Link to="/leaderboard">
-            <Button>LeaderBoard</Button>
+            <Button
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              whileTap={{ scale: 0.95 }}
+              as={motion.div}
+            >
+              LeaderBoard
+            </Button>
           </Link>
         </BoxFlex>
       </TextContainer>
